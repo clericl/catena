@@ -19,7 +19,7 @@ export const init = () => {
     //     .attr("offset", "100%")
     //     .attr("stop-color", "#005a0b");
 
-    d3.json("https://drive.google.com/open?id=1CDTrUJ-93qnez1ne_nKwsE_-an1u489e").then(data => {
+    d3.json("https://cors-anywhere.herokuapp.com/https://storage.googleapis.com/silvadb/by_etym.json").then(data => {
         window.state = data;
         console.log("ready");
         

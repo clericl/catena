@@ -1,4 +1,4 @@
-# Silva
+# Catena
 
 An interactive tool to visualize English word etymology.
 

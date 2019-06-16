@@ -58,18 +58,24 @@ const buildBranches = (seed, state) => {
 }
 
 const buildHierarchy = branches => {
-    return d3.stratify()
-        .id(d => ([d.word, d.source].join("")))
-        .parentId(d => ([d.targetWord, d.targetSource].join("")))
-        (branches);
+    try {
+        return d3.stratify()
+            .id(d => ([d.word, d.source].join("")))
+            .parentId(d => ([d.targetWord, d.targetSource].join("")))
+            (branches);
+    } catch (e) {
+        alert("database did an oopsie :( try a different word");
+    }
 }
 
 const buildTree = (seed, state) => {
-    const ancestors = buildTrunk(seed, state);
-    const root = ancestors[ancestors.length - 1];
-    const tree = buildBranches(root, state);
-    const rootNode = buildHierarchy(tree);
-    return rootNode;
+    return new Promise(resolve => {
+        const ancestors = buildTrunk(seed, state);
+        const root = ancestors[ancestors.length - 1];
+        const tree = buildBranches(root, state);
+        const rootNode = buildHierarchy(tree);
+        resolve(rootNode);
+    })
 }
 
 export default buildTree;

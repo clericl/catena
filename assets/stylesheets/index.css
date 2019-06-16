@@ -1,32 +1,66 @@
-.path {
-    fill: none;
-    stroke: #684f36;
-    stroke-opacity: 0.9;
-    stroke-width: 1.5;
+
+.content {
+    width: 80%;
+    position: relative;
 }
 
-.circle {
-    fill: #005a0b;
+.menu {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 200px;
+    right: 0px;
 }
 
-.text {
-    opacity: .3;
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
-.node:hover {
-    cursor: pointer;
+.info-box {
+    font-family: 'Spectral', serif;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: .3;
+    letter-spacing: -1px;
+    opacity: .6;
 }
 
-.node:hover .text {
-    opacity: 1;
-    font-weight: bold;
+.info {
+    display: inline;
 }
 
-.node:hover .circle {
-    stroke: white;
-    stroke-width: 3;
+.strong {
+    font-weight: 700;
 }
 
-.node:hover .text-shadow {
-    stroke: white;
+#seed-input {
+    font-family: 'Spectral', serif;
+    text-shadow: 3px 2px 4px #979797;
+    font-size: 64px;
+    width: 100%;
+    padding: 5px;
+    border: none;
+    text-align: center;
+    background: none;
+}
+
+#seed-input:focus {
+    outline: none;
+}
+
+::placeholder {
+    color: black;
+}
+
+.hidden {
+    visibility: hidden;
+    transition: all, 1s, linear;
 }

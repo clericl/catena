@@ -1,15 +1,22 @@
 <!doctype html>
 <html>
   <head>
-    <title>Silva</title>
+    <title>Catena</title>
     <link rel="stylesheet" href="./assets/stylesheets/index.css">
+    <link rel="stylesheet" href="./assets/stylesheets/svg.css">
+    <link href="https://fonts.googleapis.com/css?family=Spectral:400,700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <svg id="svg"></svg>
-    <form id="seed">
-      <input type="text" id="seed-input"/>
-      <input type="submit" value="shoot"/>
-    </form>
+    <main class="content">
+      <div id="svg"></div>
+      <aside class="menu">
+        <input type="text" id="seed-input" placeholder="/caˈtē.na/"/>
+        <div class="info-box" id="info">
+          <p class="info">Enter your word above.</p>
+          <div class="info">Suggestions: <p class="info strong">peace</p>, <p class="info strong">justice</p>, <p class="info strong">coffee</p></div>
+        </div>
+      </aside>
+    </main>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./dist/main.js"></script>
   </body>

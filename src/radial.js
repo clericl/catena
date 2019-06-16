@@ -1,127 +1,179 @@
 import buildTree from './tree';
-import * as util from './util';
+import drawLoad from './load';
 
-export const init = () => {
-    
-    window.svg = d3.select("svg")
-        .attr("width", 800)
-        .attr("height", 800);
+export const draw = source => {
 
-    // const radialGradient = svg.append("defs")
-    //     .append("radialGradient")
-    //     .attr("id", "radial-gradient");
-    
-    // radialGradient.append("stop")
-    //     .attr("offset", "0%")
-    //     .attr("stop-color", "#acd5b1");
+    const svg = d3.select("#svg")
+        .append("svg")
+            .attr("width", 800)
+            .attr("height", 800);
 
-    // radialGradient.append("stop")
-    //     .attr("offset", "100%")
-    //     .attr("stop-color", "#005a0b");
+    const windowScale = d3.scaleLinear()
+        .domain([0, 2000])
+        .range([500, 2000]);
 
-    d3.json("https://cors-anywhere.herokuapp.com/https://storage.googleapis.com/silvadb/by_etym.json").then(data => {
-        window.state = data;
-        console.log("ready");
-        
-        const seed = util.find("silva");
-            
-        rerender(seed);
-    });
+    const box = getBoxMeasure(svg, source);
+    svg.attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`)
+        .attr("width", `${windowScale(box.width)}`)
+        .attr("height", `${windowScale(box.height)}`);
 
-}
+    const t = svg.transition()
+        .duration(300);
 
-export const update = source => {
+    let pathLength;
+    const pathTween = () => d3.interpolateNumber(pathLength, 0);
 
-    const links = d3.select("svg")
-        .selectAll("path")
-        .data(source.links())
-        .join("path")
+    svg.selectAll("path")
+        .data(source.links(), d => d.source.id)
+        .enter()
+        .append("path")
             .classed("path", true)
+            .attr("stroke", "none")
             .attr("d", d3.linkRadial()
                 .angle(d => (d.x * Math.PI / 180))
-                .radius(d => d.y)
-            );
+                .radius(d => d.y))
+            .attr("stroke-dasharray", function () {
+                return pathLength = this.getTotalLength();
+            })
+            .attr("stroke-dashoffset", 0)
+            .transition(t)
+                .ease(d3.easeLinear)
+                .attr("stroke", "black")
+                .attrTween("stroke-dashoffset", pathTween);
 
-    const nodes = d3.select("svg")
-        .selectAll("g")
-        .data(source.descendants())
-        .join("g")
+    const nodes = svg.selectAll("g")
+        .data(source.descendants(), d => d.id)
+        .enter()
+        .append("g")
             .classed("node", true)
+            .attr("opacity", 0)
             .attr("transform", d => `
-                rotate(${d.x - 90})
-                translate(${d.y}, 0)
-            `);
-
-    nodes.selectAll("circle")
-        .transition()
-            .duration(2000)
-            .attr("transform", "translate(0, 0) scale(0)")
-        .remove();
-
-    nodes.selectAll("text")
-        .transition()
-            .duration(2000)
-            .attr("transform", "translate(0, 0) scale(0)")
-        .remove();
-
-    const circles = nodes.append("circle")
-        .classed("circle", true)
-        .attr("r", d => (d.height + 5));
-
-    const words = nodes.append("text")
-            .text(d => d.data.word)
-            .classed("text", true)
-            .attr("font-size", d => (8 + (3 * d.height)))
-            .attr("x", d => ((d.x < 180) === !d.children ? (d.height + 8) : -(d.height + 8)))
-            .attr("text-anchor", d => ((d.x < 180) === !d.children ? "start" : "end"))
-            .attr("transform", d => {
-                if (d.children) {
-                    return `rotate(${-(d.x - 90)})`
-                } else {
-                    return (d.x >= 180 ? "rotate(180)" : null)
-                }
-            })
-        .clone(true).lower()
-            .classed("text-shadow", true)
-            .attr("stroke-width", d => (d.height + 1))
-            .attr("font-size", d => (8 + (3 * d.height)));
-
-    const sources = nodes.append("text")
-            .text(d => `(${d.data.source})`)
-            .classed("text", true)
-            .attr("dy", "1em")
-            .attr("font-size", d => (5 + (d.height)))
-            .attr("x", d => ((d.x < 180) === !d.children ? (d.height + 8) : -(d.height + 8)))
-            .attr("text-anchor", d => ((d.x < 180) === !d.children ? "start" : "end"))
-            .attr("transform", d => {
-                if (d.children) {
-                    return `rotate(${-(d.x - 90)})`
-                } else {
-                    return (d.x >= 180 ? "rotate(180)" : null)
-                }
-            })
-        .clone(true).lower()
-            .classed("text-shadow", true)
-            .attr("stroke-width", d => (d.height + 1))
-            .attr("font-size", d => (5 + (d.height)))
-
-    const box = document.getElementById("svg").getBBox();
-    svg.attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
+                    rotate(${d.x - 90})
+                    translate(${d.y}, 0)
+                `)
+        .call(
+            select => select.transition(t)
+                .transition(t)
+                    .delay((d, i) => i * 20)
+                    .ease(d3.easeLinear)
+                    .attr("opacity", 1)
+        );
+    
+    drawNodes(nodes);
 
 }
 
-export const rerender = (seed) => {
+export const getBoxMeasure = (svg, source) => {
 
-    const sizeScale = d3.scaleLinear()
-        .domain([0, 100])
-        .range([0, 500]);
+    const nodes = svg.selectAll("g")
+        .data(source.descendants(), d => d.id)
+        .enter().append("g")
+            .attr("opacity", 0)
+            .attr("fill", "none")
+            .attr("transform", d => `
+                    rotate(${d.x - 90})
+                    translate(${d.y}, 0)
+                `);
+    
+    drawNodes(nodes);
 
-    const root = buildTree(seed, state);
-    const tree = d3.tree()
-        .size([360, sizeScale(root.descendants().length)])
-        .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
-        (root);
+    const box = svg.node().getBBox(); 
+    nodes.remove();
+    return box;
 
-    update(root);
+}
 
+export const drawNodes = nodes => {
+
+    nodes.call(
+        select => select.append("circle")
+                .classed("circle", true)
+                .attr("r", d => (d.height + 5))
+        )
+    .call(
+        select => select.append("text")
+                .text(d => d.data.word)
+                .classed("text", true)
+                .attr("font-size", d => (10 + (3 * d.height)))
+                .attr("x", d => ((d.x < 180) === !d.children ? (d.height + 8) : -(d.height + 8)))
+                .attr("text-anchor", d => ((d.x < 180) === !d.children ? "start" : "end"))
+                .attr("transform", d => {
+                    if (d.children) {
+                        return `rotate(${-(d.x - 90)})`
+                    } else {
+                        return (d.x >= 180 ? "rotate(180)" : null)
+                    }
+                })
+            .clone(true).lower()
+                .classed("text-shadow", true)
+                .attr("stroke-width", d => (d.height + 1))
+                .attr("font-size", d => (10 + (3 * d.height)))
+        )
+    .call(
+        select => select.append("text")
+                .text(d => `(${d.data.source})`)
+                .classed("text", true)
+                .attr("dy", "1em")
+                .attr("font-size", d => (7 + (d.height)))
+                .attr("x", d => ((d.x < 180) === !d.children ? (d.height + 8) : -(d.height + 8)))
+                .attr("text-anchor", d => ((d.x < 180) === !d.children ? "start" : "end"))
+                .attr("transform", d => {
+                    if (d.children) {
+                        return `rotate(${-(d.x - 90)})`
+                    } else {
+                        return (d.x >= 180 ? "rotate(180)" : null)
+                    }
+                })
+            .clone(true).lower()
+                .classed("text-shadow", true)
+                .attr("stroke-width", d => (d.height + 1))
+                .attr("font-size", d => (7 + (d.height)))
+        );
+
+}
+
+export const discard = svg => {
+    if (!svg.empty()) {
+        return svg.transition()
+                .duration(300)
+                .attrTween("opacity", d => d3.interpolateNumber(1, 0.0001))
+            .end();
+    } else {
+        return Promise.resolve(true);
+    }
+}
+
+export const update = seed => {
+    
+    const svg = d3.select("svg");
+    const input = document.querySelector("#seed-input");
+    input.setAttribute("disabled", true);
+
+    discard(svg).then(
+        res => {
+            drawLoad();
+            svg.remove();
+
+            const sizeScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([50, 800]);
+        
+            buildTree(seed, state).then(root => {
+                const tree = d3.tree()
+                    .size([360, sizeScale(root.descendants().length)])
+                    .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
+                    (root);
+            
+                root.descendants().forEach(d => (d.y = d.depth * 65));
+                
+                discard(d3.select("svg")).then(res => {
+                    d3.select("svg").remove();
+                    draw(root);
+                    input.removeAttribute("disabled");
+                    setTimeout(() => input.focus(), 10);
+                })
+            })
+        }
+    );
+    
 }

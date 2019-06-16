@@ -10,7 +10,7 @@ Language and culture are inextricable from each other. Words carry the weight of
 
 ### High-level Overview
 
-Users will enter a word and then be presented with its etymology, etymological siblings, and other information such as famous quotes. Nodes will be identified by the language family they belong to and will be sortable by such. Navigation through nodes will present an interactive way to traverse the language tree and move through adjacent etymologies, forming a complete picture of the development of the English language.
+Users will enter a word and then be presented with its etymology, etymological siblings, and other information such as famous quotes. Nodes will be identified by the language family they belong to and will be sortable by such. Navigation through nodes will present an interactive way to traverse the language tree and move through adjacent etymologies, forming a complete picture of the development of the English language. All information is sourced from a Wiktionary dump provided by Gerard de Melo (http://www1.icsi.berkeley.edu/~demelo/etymwn/).
 
 ## Functionality
 
@@ -21,12 +21,20 @@ Users will enter a word and then be presented with its etymology, etymological s
 * Clicking through nodes will allow users to navigate through the tree
 * Styling (make it an actual tree!)
 
+### Future Directions
+
+* Unfortunately, the database of words that Catena currently uses is not particularly robust. Initial changes will include building a parser for Wiktionary to access the latest and most detailed information.
+* This will allow the fleshing out of Catena with definitions, translations, and other related information that is currently lacking.
+
 ## Technologies
 
 * D3.js
-* Merriam-Webster API
-* Oxford Dictionaries API
+* Wiktionary API
 
 ## Timeline
 
-Expect to follow the MVPs.
+* Day 1: Source the data that will be used.
+* Day 2: Parse it into an organized and accessible format.
+* Day 3: Review d3.js documentation and begin to lay out code structure.
+* Day 4: Implement the data visualization.
+* Day 5: Begin styling.

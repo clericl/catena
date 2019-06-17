@@ -6,7 +6,7 @@ An interactive tool to visualize English word etymology.
 
 ### Motivations
 
-Language and culture are inextricable from each other. Words carry the weight of time and place, holding onto the common emotions, ideas, and the other most salient parts of life that people need to share their experiences. Etymology is a way to explore these ideas and bridge time and place, seeing how different peoples across different eras find similarities in the things they need to express to each other. Realizing these connections in a data visualization is a fantastic way to reach back in time to see how cultures overlap, evolve, and come together into the English language we know today.
+Language and culture are inextricable from each other. Words carry the weight of time and place, holding within them the emotions, ideas, and other salient parts of life that link every individual person. Etymology is a way to bridge these times and places, and by tracking the etymology of a word, we can see how different peoples across different eras find similarities in the things they need to express to each other. Realizing these connections in a data visualization is a fantastic way to reach back in time to see how cultures overlap, evolve, and come together in sharing our lives.
 
 ### High-level Overview
 

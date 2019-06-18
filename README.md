@@ -1,6 +1,6 @@
 # Catena
 
-An interactive tool to visualize English word etymology.
+An interactive tool to visualize English word etymology. [Check it out here.](https://clericl.github.io/catena/)
 
 ## Overview
 

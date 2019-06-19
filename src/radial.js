@@ -158,22 +158,27 @@ export const update = seed => {
                 .domain([0, 100])
                 .range([50, 800]);
         
-            buildTree(seed, state).then(root => {
-                const tree = d3.tree()
-                    .size([360, sizeScale(root.descendants().length)])
-                    .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
-                    (root);
-            
-                root.descendants().forEach(d => (d.y = d.depth * 65));
+            buildTree(seed, state).then(
+                root => {
+                    const tree = d3.tree()
+                        .size([360, sizeScale(root.descendants().length)])
+                        .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
+                        (root);
                 
-                discard(d3.select("svg")).then(res => {
-                    d3.select("svg").remove();
-                    draw(root);
+                    root.descendants().forEach(d => (d.y = d.depth * 65));
+                    
+                    discard(d3.select("svg")).then(res => {
+                        d3.select("svg").remove();
+                        draw(root);
+                        input.removeAttribute("disabled");
+                        setTimeout(() => input.focus(), 10);
+                    })
+                },
+                rej => {
                     input.removeAttribute("disabled");
                     setTimeout(() => input.focus(), 10);
-                })
-            })
+                }
+            );
         }
-    );
-    
+    )
 }

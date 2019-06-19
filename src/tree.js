@@ -64,17 +64,18 @@ const buildHierarchy = branches => {
             .parentId(d => ([d.targetWord, d.targetSource].join("")))
             (branches);
     } catch (e) {
-        alert("database did an oopsie :( try a different word");
+        alert("database did an oopsie :( try a different word?");
+        return false;
     }
 }
 
 const buildTree = (seed, state) => {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         const ancestors = buildTrunk(seed, state);
         const root = ancestors[ancestors.length - 1];
         const tree = buildBranches(root, state);
         const rootNode = buildHierarchy(tree);
-        resolve(rootNode);
+        rootNode ? resolve(rootNode) : reject(rootNode);
     })
 }
 

@@ -1,4 +1,4 @@
-const drawLoad = () => {
+export const initLoad = () => {
 
     let pathLength;
     const width = 50;
@@ -50,4 +50,20 @@ const drawLoad = () => {
 
 }
 
-export default drawLoad;
+export const drawLoad = seed => {
+    const svg = d3.select("#svg")
+        .append("svg")
+    
+    const text = svg.append("text")
+        .classed("building", true)
+            .text(`Building chain: ${seed.word}`)
+            .attr("opacity", 0)
+        .transition(300)
+            .attr("opacity", .6)
+
+    const box = text.node().getBBox();
+
+    svg.attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`)
+        .attr("width", `${box.width}`)
+        .attr("height", `${box.height}`);
+}

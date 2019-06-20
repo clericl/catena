@@ -1,5 +1,5 @@
 import buildTree from './tree';
-import drawLoad from './load';
+import { drawLoad } from './load';
 
 export const draw = source => {
 
@@ -151,9 +151,8 @@ export const update = seed => {
 
     discard(svg).then(
         res => {
-            drawLoad();
             svg.remove();
-
+            drawLoad(seed);
             const sizeScale = d3.scaleLinear()
                 .domain([0, 100])
                 .range([50, 800]);
@@ -166,7 +165,7 @@ export const update = seed => {
                         (root);
                 
                     root.descendants().forEach(d => (d.y = d.depth * 65));
-                    
+    
                     discard(d3.select("svg")).then(res => {
                         d3.select("svg").remove();
                         draw(root);
@@ -176,6 +175,7 @@ export const update = seed => {
                 },
                 rej => {
                     input.removeAttribute("disabled");
+                    d3.select("svg").remove();
                     setTimeout(() => input.focus(), 10);
                 }
             );

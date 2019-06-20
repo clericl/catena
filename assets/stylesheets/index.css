@@ -144,6 +144,20 @@ body {
     align-items: center;
 }
 
+.help-icon-dark {
+    margin-top: 24px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .help-icon:hover {
     background-color: black;
     cursor: default;

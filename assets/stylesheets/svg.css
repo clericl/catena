@@ -4,6 +4,7 @@
     height: max-content;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 svg {
@@ -46,3 +47,9 @@ svg {
 /* .node:hover .text-shadow {
     stroke: white;
 } */
+
+.building {
+    font-family: 'Spectral', serif;
+    font-size: 22px;
+    letter-spacing: -1px;
+}

@@ -57,9 +57,6 @@ export const drawLoad = seed => {
     const text = svg.append("text")
         .classed("building", true)
             .text(`Building chain: ${seed.word}`)
-            .attr("opacity", 0)
-        .transition(300)
-            .attr("opacity", .6)
 
     const box = text.node().getBBox();
 

@@ -22,7 +22,8 @@ const buildTrunk = (seed, state) => {
         parentNode = state.find(datum => (
             datum.word === currentNode.targetWord &&
             datum.source === currentNode.targetSource &&
-            datum.rel === "from"
+            datum.rel === "from" &&
+            !ancestors.includes(datum)
         ));
     }
 

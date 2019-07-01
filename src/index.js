@@ -57,13 +57,13 @@ input.addEventListener("input", e => {
     }
 });
 
-// input.addEventListener("focus", e => {
-//     e.currentTarget.placeholder = "";
-// });
+input.addEventListener("focus", e => {
+    e.currentTarget.placeholder = "";
+});
 
-// input.addEventListener("blur", e => {
-//     e.currentTarget.placeholder = "/caˈtē.na/";
-// })
+input.addEventListener("blur", e => {
+    e.currentTarget.placeholder = "/caˈtē.na/";
+})
 
 helpIcon.addEventListener("mouseenter", e => {
     helpText.classList.remove("hidden");

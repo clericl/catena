@@ -169,3 +169,12 @@ body {
     text-align: center;
     margin-top: 10px;
 }
+
+.background {
+    background-image: radial-gradient(farthest-corner at 0 0, white, white, white, #cecece, #636363);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}

@@ -1,12 +1,3 @@
-// for console testing
-
-// let state, seed;
-
-// d3.json("assets/data/by_etym.json").then(function(data) {
-//     state = data;
-//     console.log("ready");
-//   });
-
 const buildTrunk = (seed, state) => {
     const ancestors = [seed];
     let currentNode = seed;

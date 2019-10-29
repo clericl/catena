@@ -59,14 +59,6 @@ const buildBranches = (seed, state) => {
 }
 ```
 
-## Functionality
-
-### MVP Features
- 
-* Users will be able to enter a word and be presented with its etymology and etymological relations
-* Nodes representing words will be connected in a tree diagram
-* Information will be presented through a minimalistic but intuitive interface
-
 ### Future Directions
 
 * Unfortunately, the database of words that Catena currently uses is not particularly robust. Initial changes will include building a parser for Wiktionary to access the latest and most detailed information.
@@ -77,10 +69,10 @@ const buildBranches = (seed, state) => {
 * D3.js
 * Wiktionary API
 
-## Timeline
+## Issues
 
-* Day 1: Source the data that will be used.
-* Day 2: Parse it into an organized and accessible format.
-* Day 3: Review d3.js documentation and begin to lay out code structure.
-* Day 4: Implement the data visualization.
-* Day 5: Begin styling.
+Please feel free to tackle these or any other bugs you've found if you'd like to contribute to this project!
+
+* If the input word exists across multiple languages, one is chosen arbitrarily (the first one found)
+* Stratification fails if the database returns multiple parent relationships for a word, typically if they are homonyms. Currently bandaided over by selecting for the first one and throwing the others out
+* Of course, improvements to the database (feel free to submit words and their etymological chains!)

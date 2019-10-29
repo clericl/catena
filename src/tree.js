@@ -50,11 +50,28 @@ const buildBranches = (seed, state) => {
     return branches;
 }
 
+const filterUnique = arr => {
+    const memo = {}
+    const output = []
+
+    for (const element of arr) {
+        const key = element.word + element.source
+
+        if (memo[key]) {
+            continue
+        } else {
+            memo[key] = element
+            output.push(element)
+        }
+    }
+    return output
+}
+
 const buildHierarchy = branches => {
     try {
         return d3.stratify()
-            .id(d => ([d.word, d.source].join("")))
-            .parentId(d => ([d.targetWord, d.targetSource].join("")))
+            .id(d => (d.word + d.source))
+            .parentId(d => (d.targetWord + d.targetSource || ''))
             (branches);
     } catch (e) {
         alert("database did an oopsie :( try a different word?");
@@ -70,7 +87,7 @@ const buildTree = async (seed, state) => {
         tree = buildBranches(root, state);
         await postTree(root, tree);
     }
-    const rootNode = buildHierarchy(tree);
+    const rootNode = buildHierarchy(filterUnique(tree));
     return (rootNode ? rootNode : false);
 }
 

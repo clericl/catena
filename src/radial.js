@@ -58,7 +58,7 @@ export const draw = source => {
                     .ease(d3.easeLinear)
                     .attr("opacity", 1)
         );
-    
+
     drawNodes(nodes);
 
 }
@@ -74,10 +74,10 @@ export const getBoxMeasure = (svg, source) => {
                     rotate(${d.x - 90})
                     translate(${d.y}, 0)
                 `);
-    
+
     drawNodes(nodes);
 
-    const box = svg.node().getBBox(); 
+    const box = svg.node().getBBox();
     nodes.remove();
     return box;
 
@@ -132,53 +132,49 @@ export const drawNodes = nodes => {
 
 }
 
-export const discard = svg => {
+export const discard = async svg => {
     if (!svg.empty()) {
-        return svg.transition()
+        const res = await svg.transition()
                 .duration(300)
                 .attrTween("opacity", d => d3.interpolateNumber(1, 0.0001))
             .end();
     } else {
-        return Promise.resolve(true);
-    }
+        return true;
+    };
 }
 
-export const update = seed => {
-    
+export const update = async seed => {
     const svg = d3.select("svg");
     const input = document.querySelector("#seed-input");
     input.setAttribute("disabled", true);
 
-    discard(svg).then(
-        res => {
-            svg.remove();
-            drawLoad(seed);
-            const sizeScale = d3.scaleLinear()
-                .domain([0, 100])
-                .range([50, 800]);
-        
-            buildTree(seed, state).then(
-                root => {
-                    const tree = d3.tree()
-                        .size([360, sizeScale(root.descendants().length)])
-                        .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
-                        (root);
-                
-                    root.descendants().forEach(d => (d.y = d.depth * 65));
-    
-                    discard(d3.select("svg")).then(res => {
-                        d3.select("svg").remove();
-                        draw(root);
-                        input.removeAttribute("disabled");
-                        setTimeout(() => input.focus(), 10);
-                    })
-                },
-                rej => {
-                    input.removeAttribute("disabled");
-                    d3.select("svg").remove();
-                    setTimeout(() => input.focus(), 10);
-                }
-            );
-        }
-    )
+    await discard(svg);
+
+    svg.remove();
+    drawLoad(seed);
+    const sizeScale = d3.scaleLinear()
+        .domain([0, 100])
+        .range([50, 800]);
+
+    const root = await buildTree(seed, state)
+
+    if (root) {
+        const tree = d3.tree()
+            .size([360, sizeScale(root.descendants().length)])
+            .separation((a, b) => ((a.parent == b.parent ? 1 : 2) / a.depth))
+            (root);
+
+        root.descendants().forEach(d => (d.y = d.depth * 65));
+
+        await discard(d3.select("svg"));
+
+        d3.select("svg").remove();
+        draw(root);
+        input.removeAttribute("disabled");
+        setTimeout(() => input.focus(), 10);
+    } else {
+        input.removeAttribute("disabled");
+        d3.select("svg").remove();
+        setTimeout(() => input.focus(), 10);
+    };
 }

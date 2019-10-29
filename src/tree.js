@@ -1,3 +1,5 @@
+import { fetchTree, postTree } from './util';
+
 const buildTrunk = (seed, state) => {
     const ancestors = [seed];
     let currentNode = seed;
@@ -45,7 +47,6 @@ const buildBranches = (seed, state) => {
             branches = branches.concat(buildBranches(child, state));
         })
     };
-
     return branches;
 }
 
@@ -58,17 +59,19 @@ const buildHierarchy = branches => {
     } catch (e) {
         alert("database did an oopsie :( try a different word?");
         return false;
-    }
+    };
 }
 
-const buildTree = (seed, state) => {
-    return new Promise((resolve, reject) => {
-        const ancestors = buildTrunk(seed, state);
-        const root = ancestors[ancestors.length - 1];
-        const tree = buildBranches(root, state);
-        const rootNode = buildHierarchy(tree);
-        rootNode ? resolve(rootNode) : reject(rootNode);
-    })
+const buildTree = async (seed, state) => {
+    const ancestors = buildTrunk(seed, state);
+    const root = ancestors[ancestors.length - 1];
+    let { tree } = await fetchTree(root);
+    if (!tree) {
+        tree = buildBranches(root, state);
+        await postTree(root, tree);
+    }
+    const rootNode = buildHierarchy(tree);
+    return (rootNode ? rootNode : false);
 }
 
 export default buildTree;
